@@ -21,7 +21,7 @@ let parse2lines (text:string) =
 
 let solve1 (text:string) = 
     let inp = text |> parse2lines
-    0
+    123
     
 let solve2 (text:string) =
     let inp = text |> parse2lines

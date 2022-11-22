@@ -1,6 +1,7 @@
 ﻿namespace Aoc22
 
 open System.IO
+open System.Reflection
 
 module Input =
     let rec private skipLastEmpty (lst:string list) =
@@ -14,8 +15,9 @@ module Input =
             | "", [] -> []
             | _ -> head :: skippedTail
 
-    //let env2f env = env |> function | T -> "t.txt" | P -> "p.txt"
-    let f2text fpath = fpath |> File.ReadAllText
+    let f2text fpath = 
+        let dir = Directory.GetParent(Assembly.GetEntryAssembly().Location).FullName
+        fpath |> fun nm -> Path.Combine(dir, nm) |> File.ReadAllText
     let f2lines fpath = fpath |> File.ReadAllLines |> List.ofSeq |> skipLastEmpty
     let text2tokens (splitCh:string) (text:string) = text.Split(splitCh.ToCharArray(), System.StringSplitOptions.RemoveEmptyEntries) |> List.ofArray
     let text2tokensStr (splitStrs:string list) (text:string) = text.Split(splitStrs |> Array.ofSeq, System.StringSplitOptions.RemoveEmptyEntries) |> List.ofArray
