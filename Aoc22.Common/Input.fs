@@ -23,4 +23,8 @@ module Input =
     let text2tokensStr (splitStrs:string list) (text:string) = text.Split(splitStrs |> Array.ofSeq, System.StringSplitOptions.RemoveEmptyEntries) |> List.ofArray
     let text2lines (text:string) = text.Split("\r\n") |> List.ofArray |> skipLastEmpty
     let f2tokens splitCh fpath = fpath |> f2text |> text2tokens splitCh
+    let list2groups (isDelimiterLine: 'T -> bool) (lst : 'T list) = 
+        let state0 : 'T list list = [[]]
+        lst
+        |> List.fold (fun (x::y) item -> if (isDelimiterLine item) then []::x::y else (item::x)::y) state0
 

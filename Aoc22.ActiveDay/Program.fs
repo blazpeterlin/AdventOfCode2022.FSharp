@@ -21,6 +21,7 @@ let parseLine (ln:string) =
 let parse2lines (text:string) = 
     text
     |> text2lines 
+    // |> Input.list2groups ((=)"")
     |> List.map parseLine
 
 let solve1 (text:string) = 
