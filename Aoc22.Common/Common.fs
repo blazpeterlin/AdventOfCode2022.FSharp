@@ -1,5 +1,7 @@
 ﻿namespace Aoc22
 
+open System.Collections.Generic
+
 module Common =
     let manhattan (x0,y0) (x1,y1) = abs(x1-x0)+abs(y1-y0)
 
@@ -24,3 +26,22 @@ module Common =
         let head = enumerator.Current
         
         head
+
+    
+    let Dijkstra (pos0:'a) (getNextPos:'a->'a seq) (isFinish:'a->bool) =
+        let pq = PriorityQueue()
+        pq.Enqueue((pos0,[pos0]), 0)
+        let visited0 = [] |> Set
+        let res =
+            visited0
+            |> Seq.unfold (fun v ->
+                let currPos,history = pq.Dequeue()
+                let reportPos = if isFinish currPos then Some(history) else None
+                let v2 = v.Add currPos
+                let allNextPos = currPos |> getNextPos |> Seq.filter (v2.Contains >> not)
+                pq.EnqueueRange (allNextPos |> Seq.map (fun pos -> (pos,pos::history),history.Length))
+                Some((v2, reportPos), v2)
+            )
+            |> Seq.choose snd
+            |> Seq.head
+        res
