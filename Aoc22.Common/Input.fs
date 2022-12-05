@@ -27,4 +27,5 @@ module Input =
         let state0 : 'T list list = [[]]
         lst
         |> List.fold (fun (x::y) item -> if (isDelimiterLine item) then []::x::y else (item::x)::y) state0
-
+        |> List.map List.rev
+        |> List.rev
