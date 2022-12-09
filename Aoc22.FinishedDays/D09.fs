@@ -32,6 +32,7 @@ let stepH (hx0,hy0) (dir,num) =
                             let delta = match dir with | 'L' -> (-1,0) | 'R' -> (+1,0) | 'D' -> (0,+1) | 'U' -> (0, -1)
                             (hx,hy)+..delta
         ) (hx0,hy0)
+        |> List.skip 1
     r
 
 let tailFollowH (tx0:int,ty0:int) (hx:int,hy:int) : (int*int) =
