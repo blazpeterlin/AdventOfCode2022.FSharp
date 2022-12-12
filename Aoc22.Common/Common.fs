@@ -31,16 +31,18 @@ module Common =
     let Dijkstra (pos0:'a) (getNextPos:'a->'a seq) (isFinish:'a->bool) =
         let pq = PriorityQueue()
         pq.Enqueue((pos0,[pos0]), 0)
-        let visited0 = [] |> Set
+        let visited0 = [] |> HashSet // mutable
         let res =
             visited0
             |> Seq.unfold (fun v ->
                 let currPos,history = pq.Dequeue()
                 let reportPos = if isFinish currPos then Some(history) else None
-                let v2 = v.Add currPos
-                let allNextPos = currPos |> getNextPos |> Seq.filter (v2.Contains >> not)
-                pq.EnqueueRange (allNextPos |> Seq.map (fun pos -> (pos,pos::history),history.Length))
-                Some((v2, reportPos), v2)
+                if v.Add currPos then
+                    let allNextPos = currPos |> getNextPos |> Seq.filter (v.Contains >> not)
+                    pq.EnqueueRange (allNextPos |> Seq.map (fun pos -> (pos,pos::history),history.Length))
+                    Some((v, reportPos), v)
+                else
+                    Some((v, reportPos), v)
             )
             |> Seq.choose snd
             |> Seq.head
