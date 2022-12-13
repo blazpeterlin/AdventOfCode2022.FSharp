@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="D13b.fs" />
     <Compile Include="D13.fs" />
     <Compile Include="D12.fs" />
     <Compile Include="D11.fs" />
@@ -25,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FParsec" Version="1.1.1" />
     <PackageReference Include="FSharp.Text.RegexProvider" Version="2.1.0" />
   </ItemGroup>
 
