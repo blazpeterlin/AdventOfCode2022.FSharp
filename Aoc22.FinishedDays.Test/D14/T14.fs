@@ -1,5 +1,5 @@
 ﻿module Aoc22.FinishedDays.Test.T14
-open Aoc22.D14
+open Aoc22.D14b // way better than D14
 
 open Aoc22.Input
 open NUnit.Framework
