@@ -87,7 +87,8 @@ let solve2 (text:string) =
 
     let ZERO = IntVal 0
 
-    let absFn (x:Int) = IIF_Int (x <=. ZERO, ZERO - x, x)
+    //let absFn (x:Int) = IIF_Int (x <=. ZERO, ZERO - x, x)
+    let absFn (x:Int) = x <=. ZERO ??> ZERO - x --> x
 
     for ((sx,sy),sd) in sensorsWithDist do
         let dv = IntVal sd
