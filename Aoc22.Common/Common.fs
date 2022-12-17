@@ -1,6 +1,7 @@
 ﻿namespace Aoc22
 
 open System.Collections.Generic
+open System
 
 module Common =
     let manhattan (x0,y0) (x1,y1) = abs(x1-x0)+abs(y1-y0)
@@ -107,3 +108,36 @@ module Common =
             }
             |> seq
         r
+
+    let print2d (fullCoords: (int*int) seq) =
+        let printed = fullCoords |> Seq.sortBy (fun pos -> snd pos,fst pos) |> List.ofSeq
+        let mutable prevY = 1
+        let mutable prevX = 1
+        for (x,y) in printed do
+            while prevY <> y do
+                Console.WriteLine(); 
+                prevX <- 0;
+                prevY <- prevY + 1
+                0 |> ignore
+            
+            for ix in [prevX+2 .. x] do Console.Write(' ')
+            Console.Write("█")
+            prevY <- y
+            prevX <- x
+
+    
+    let print2dBounds (fullCoords: (int*int) seq) minX maxX minY maxY =
+        let printed = fullCoords |> Seq.filter (fun (x,y) -> x >= minX && x <= maxX && y >= minY && y <= maxY) |> Seq.sortBy (fun pos -> snd pos,fst pos) |> List.ofSeq
+        let mutable prevY = 1
+        let mutable prevX = 1
+        for (x,y) in printed do
+            while prevY <> y do
+                Console.WriteLine(); 
+                prevX <- 0;
+                prevY <- prevY + 1
+                0 |> ignore
+
+            for ix in [prevX+2 .. x] do Console.Write(' ')
+            Console.Write("█")
+            prevY <- y
+            prevX <- x
