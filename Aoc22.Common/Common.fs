@@ -47,6 +47,25 @@ module Common =
             |> Seq.head
         res
     
+    let DijkstraExistsAndGetVisited (pos0:'a) (getNextPos:'a->'a seq) (isFinish:'a->bool) =
+        let pq = PriorityQueue() // mutable
+        pq.Enqueue((pos0,[pos0]), 0)
+        let visited0 = [] |> HashSet // mutable
+        let res =
+            visited0
+            |> Seq.unfold (fun v ->
+                if pq.Count=0 then None else
+                let currPos,history = pq.Dequeue()
+                let reportPos = if isFinish currPos then Some(history) else None
+                if v.Add currPos then
+                    let allNextPos = currPos |> getNextPos |> Seq.filter (v.Contains >> not)
+                    pq.EnqueueRange (allNextPos |> Seq.map (fun pos -> (pos,pos::history),history.Length))
+                Some((v, reportPos), v)
+            )
+            |> Seq.choose snd
+            |> Seq.tryHead
+        if res.IsSome then (true,visited0) else (false,visited0)
+    
     let AStar (pos0:'a) (heuristic: 'a->int) (isFinish:'a->bool) (getNextPos:'a->('a*int) seq) =
         let pq = PriorityQueue() // mutable
         let h0 = heuristic pos0
