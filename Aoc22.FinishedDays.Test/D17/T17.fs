@@ -23,3 +23,15 @@ let Test2 (fn : string, res: int64) =
     let input = fn |> prependFolder |> f2text
     let sln2 = solve2 input
     Assert.That(sln2, Is.EqualTo res)
+    
+[<TestCase("input-TEST-alenb.txt", 0L)>] 
+let Test2b (fn : string, res: int64) = 
+    let input = fn |> prependFolder |> f2text
+    let sln2 = solve2 input
+    Assert.That(sln2, Is.EqualTo res)
+    
+[<TestCase("input-TEST-example.txt", 0L)>] 
+let Test2c (fn : string, res: int64) = 
+    let input = fn |> prependFolder |> f2text
+    let sln2 = solve2 input
+    Assert.That(sln2, Is.EqualTo res)

@@ -111,7 +111,7 @@ let solve2 (text:string) =
         // try it the simple way - just prune an arbitrary number of lines until it doesn't hang
         st
         |> Set.toSeq
-        |> Seq.filter (fun (x,y) -> y <= 30L)
+        |> Seq.filter (fun (x,y) -> y <= 50L)
         |> Set
         
     let st0 = 0,set0,0,0L

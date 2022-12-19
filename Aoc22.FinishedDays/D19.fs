@@ -1,4 +1,4 @@
-﻿module Aoc22.ActiveDay
+﻿module Aoc22.D19
 
 open Aoc22
 open Input
@@ -44,6 +44,9 @@ let getNextPos (bp: Blueprint) (st:State) : (State) seq =
             SC = minedSc;
             MinutesLeft=st.MinutesLeft - 1;
     }
+
+    let maxOre = [bp.ClayR_Ore;bp.OreR_Ore;bp.GeoR_Ore;bp.ObsR_Ore] |> List.max |> fun mxOre -> mxOre+1
+
     seq { 
         //if not (sc.Ore >= bp.OreR_Ore && sc.Ore >= bp.ClayR_Ore &&  sc.Ore >= bp.ObsR_Ore && sc.Clay >= bp.ObsR_Clay && sc.Ore >= bp.GeoR_Ore && sc.Obs >= bp.GeoR_Obs )
         //    && not (sc.Ore >= bp.OreR_Ore && sc.Ore >= bp.ClayR_Ore && sc.Clay >= bp.ObsR_Clay && sc.Obs >= bp.GeoR_Obs)
@@ -59,6 +62,18 @@ let getNextPos (bp: Blueprint) (st:State) : (State) seq =
         if sc.Ore >= bp.GeoR_Ore && sc.Obs >= bp.GeoR_Obs then yield { minedSt with SC={ minedSc with Ore=minedSc.Ore-bp.GeoR_Ore; Obs=minedSc.Obs-bp.GeoR_Obs ; GeoR=minedSc.GeoR+1} } 
             //0|>ignore
     }
+    |> Seq.map (
+        fun seqst -> 
+        { seqst with 
+            SC= 
+            { seqst.SC with 
+                Ore=min maxOre seqst.SC.Ore
+            }
+        }
+    )
+
+    
+    
 
 let pos2v (st:State) = st.SC
 
@@ -67,24 +82,33 @@ let h (st:State) =
     0
     //1000 * st.MinutesLeft
 
+let baseScore = 100000000
+let geoScore = 1000
+
+let potentialUnmadeGeosByMinutesLeft = 
+    [1 .. 32]
+    |> List.map (
+        fun i -> 
+            i, ([1 .. i] |> List.sum)
+    )
+    |> Map.ofList
+
+
 let pos2bonus (st:State) =
     let sc = st.SC
-    let r0 = 100000 - sc.Geo // - st.MinutesLeft
+    let r0 = baseScore - sc.Geo * geoScore
 
-    //let r = r0 - st.MinutesLeft * 1000
     let r = 
         if st.MinutesLeft > 1
         then
-            let potentialUnmadeGeoRsYield = [2..st.MinutesLeft] |> List.map (fun anotherGeoRmins -> anotherGeoRmins-1) |> List.sum
-            r0 - potentialUnmadeGeoRsYield
-        else r0 - st.MinutesLeft
+            let potentialUnmadeGeoRsYield = potentialUnmadeGeosByMinutesLeft[st.MinutesLeft-1]
+            //let potentialUnmadeGeoRsYield = potentialUnmadeGeosByMinutesLeft[st.MinutesLeft/2+1]
+            r0 - potentialUnmadeGeoRsYield * geoScore // - potentialGeoMakers
+        else r0 - st.MinutesLeft * 1
 
     if st.MinutesLeft > 0 
-    then r - ((st.MinutesLeft) * sc.GeoR)
+    then r - ((st.MinutesLeft) * sc.GeoR) * geoScore
     else r
-    //let r = 10000000 - st.Geo - st.MinutesLeft * st.GeoR - st.MinutesLeft
-    //if r < 10000000 then 0 else 0
-    //r
 
 
 let solve1 (text:string) = 
@@ -95,15 +119,13 @@ let solve1 (text:string) =
 
     let resById =
         inps
-        //Common.AStarFasterVBonus st0 h (fun x -> x.MinutesLeft=0) (getNextPos inp[0]) pos2bonus pos2v
         |> List.map (fun inp -> inp, Common.AStarFasterVBonus st0 h (fun x -> x.MinutesLeft=0) (getNextPos inp) pos2bonus pos2v)
         |> List.map (fun (inp, (rres::tail,_)) -> (inp, rres))
     let res = resById |> List.map (fun (inp,r) -> inp.Id * r.SC.Geo)
         
+    let r = res |> List.sum
 
-
-    // 1642 too low
-    res |> List.sum
+    r
 
     
 let solve2 (text:string) =
@@ -114,21 +136,17 @@ let solve2 (text:string) =
 
     let resById =
         inps
-        //Common.AStarFasterVBonus st0 h (fun x -> x.MinutesLeft=0) (getNextPos inp[0]) pos2bonus pos2v
         |> List.map (fun inp -> inp, Common.AStarFasterVBonus st0 h (fun x -> x.MinutesLeft=0) (getNextPos inp) pos2bonus pos2v)
         |> List.map (fun (inp, (rres::tail,_)) -> (inp, rres))
     let res = resById |> List.map (fun (inp,r) -> r.SC.Geo)
         
-
-
-    // 1642 too low
     let r = res |> List.reduce (*)
     r
 
 //let res1 = input |> solve1
-let res2 = input |> solve2
+//let res2 = input |> solve2
 
-ClipboardService.SetText(res2.ToString())
+//ClipboardService.SetText(res1.ToString())
 
 
 let finished = true
