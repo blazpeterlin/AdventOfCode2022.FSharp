@@ -105,6 +105,27 @@ module Common =
             }
             |> Seq.head
         resHistory,resCost
+    
+    let AStarFasterVBonus (pos0:'a) (heuristic: 'a->int) (isFinish:'a->bool) (getNextPos:'a->'a seq) (pos2bonus: 'a -> int) (pos2v: 'a -> 'b) =
+        let pq = PriorityQueue() // mutable
+        let h0 = heuristic pos0
+        pq.Enqueue((pos0,[pos0],0), 0+h0)
+        let v = [] |> HashSet // mutable
+        let resHistory,resCost =
+            seq {
+                while pq.Count>0 do
+                    let currPos,history,costSoFar = pq.Dequeue()
+                    if v.Add (currPos |> pos2v) then
+                        if isFinish currPos then yield (history,costSoFar)
+                        let allNextPos = currPos |> getNextPos// |> Seq.filter (fun (pos,_) -> v.Contains pos |> not)
+                        pq.EnqueueRange (allNextPos 
+                                            |> Seq.map (fun (pos) -> 
+                                                            let h = heuristic pos
+                                                            let bonus = pos2bonus pos
+                                                            (pos,pos::[],bonus),bonus+h))
+            }
+            |> Seq.head
+        resHistory,resCost
 
     
     let AStarSeq (pos0:'a) (heuristic: 'a->int) (isFinish:'a->bool) (getNextPos:'a->('a*int) seq) =
