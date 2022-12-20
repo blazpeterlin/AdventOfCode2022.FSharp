@@ -22,6 +22,7 @@ module Input =
     let text2tokens (splitCh:string) (text:string) = text.Split(splitCh.ToCharArray(), System.StringSplitOptions.RemoveEmptyEntries) |> List.ofArray
     let text2tokensStr (splitStrs:string list) (text:string) = text.Split(splitStrs |> Array.ofSeq, System.StringSplitOptions.RemoveEmptyEntries) |> List.ofArray
     let text2lines (text:string) = text.Split("\r\n") |> List.ofArray |> skipLastEmpty
+    let text2linesW (text:string) = text.Split("\r\n") |> List.ofArray
     let f2tokens splitCh fpath = fpath |> f2text |> text2tokens splitCh
     let list2groups (isDelimiterLine: 'T -> bool) (lst : 'T list) = 
         let state0 : 'T list list = [[]]

@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="D20.fs" />
     <Compile Include="D19.fs" />
     <Compile Include="D18.fs" />
     <Compile Include="D17.fs" />
