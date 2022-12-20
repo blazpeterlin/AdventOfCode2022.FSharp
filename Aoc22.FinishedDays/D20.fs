@@ -15,13 +15,10 @@ let input =  "input.txt" |> f2text
 
 let parseLine (ln:string) =
     ln |> int
-    // |> text2tokens "x"
-    // |> text2tokensStr ["abc";"def"]
 
 let parse2lines (text:string) = 
     text
-    |> text2linesW
-    // |> Input.list2groups ((=)"")
+    |> text2lines
     |> List.map parseLine
     
 let getPrev (node:LinkedListNode<'a>) =
@@ -95,7 +92,7 @@ let parseLineL (ln:string) =
 
 let parse2linesL (text:string) = 
     text
-    |> text2linesW
+    |> text2lines
     |> List.map parseLineL
     
 let solve2 (text:string) =
@@ -142,10 +139,10 @@ let solve2 (text:string) =
 
     r
 
-//let res1 = input |> solve1
+let res1 = input |> solve1
 let res2 = input |> solve2
 
-ClipboardService.SetText(res2.ToString())
+ClipboardService.SetText(res1.ToString())
 
 
 let finished = true

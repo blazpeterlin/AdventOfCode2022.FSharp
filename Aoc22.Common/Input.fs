@@ -4,25 +4,19 @@ open System.IO
 open System.Reflection
 
 module Input =
-    let rec private skipLastEmpty (lst:string list) =
+    let rec private skipFirstEmpty (lst:string list) =
         match lst with
         | [] -> []
-        | [""] -> []
-        | [x] -> [x]
-        | head :: tail -> 
-            let skippedTail = skipLastEmpty(tail)
-            match head, skippedTail with
-            | "", [] -> []
-            | _ -> head :: skippedTail
+        | ""::tail -> skipFirstEmpty tail
+        | x -> x
 
     let f2text fpath = 
         let dir = Directory.GetParent(Assembly.GetEntryAssembly().Location).FullName
         fpath |> fun nm -> Path.Combine(dir, nm) |> File.ReadAllText
-    let f2lines fpath = fpath |> File.ReadAllLines |> List.ofSeq |> skipLastEmpty
+    let f2lines fpath = fpath |> File.ReadAllLines |> List.ofSeq |> List.rev |> skipFirstEmpty |> List.rev
     let text2tokens (splitCh:string) (text:string) = text.Split(splitCh.ToCharArray(), System.StringSplitOptions.RemoveEmptyEntries) |> List.ofArray
     let text2tokensStr (splitStrs:string list) (text:string) = text.Split(splitStrs |> Array.ofSeq, System.StringSplitOptions.RemoveEmptyEntries) |> List.ofArray
-    let text2lines (text:string) = text.Split("\r\n") |> List.ofArray |> skipLastEmpty
-    let text2linesW (text:string) = text.Split("\r\n") |> List.ofArray
+    let text2lines (text:string) = text.Split("\r\n") |> List.ofArray |> List.rev |> skipFirstEmpty |> List.rev
     let f2tokens splitCh fpath = fpath |> f2text |> text2tokens splitCh
     let list2groups (isDelimiterLine: 'T -> bool) (lst : 'T list) = 
         let state0 : 'T list list = [[]]
