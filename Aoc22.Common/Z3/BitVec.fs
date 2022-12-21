@@ -130,3 +130,13 @@ let BitVecVal (size: obj) (v: int) =
         | _ -> failwith "unsupported type for size"
 
     createBitVec v sizeUnsigned :> BitVecExpr |> BitVecExpr
+
+let BitVecVal64 (size: obj) (v: int64) =
+    let sizeUnsigned =
+        match size with
+        | :? uint32 as sizeUI -> sizeUI
+        | :? int32 as sizeI -> sizeI |> uint32
+        | :? bigint as sizeBI -> sizeBI |> uint32
+        | _ -> failwith "unsupported type for size"
+
+    createBitVec v sizeUnsigned :> BitVecExpr |> BitVecExpr
