@@ -139,45 +139,61 @@ let solve2 (text:string) =
     let mp = mpLst |> Map.ofList
 
     let wrapAround (x,y) (dx,dy) =
+        // calculate face
         let facex = x / 50
         let facey = y / 50
 
+        // calculate position within face
         let relX = x%50
         let relY = y%50
 
+        // manually considered each face and where it would go for my specific input, which looked like this:
+        // |  12 |
+        // |  3  |
+        // | 45  |
+        // | 6   |
+        // For example, face 1 has facex,facey = 1,0
+
         let (x2,y2),(dx2,dy2) =
             match (facex,facey),(dx,dy) with
+
+            // face 3 <-> face 4
             | (1,1),(-1,0) -> 
                 (relY,50*2),(0,1)
             | (0,2),(0, -1) ->
                 (50*1,50+relX),(1,0)
 
+            // face 1 <-> face 4
             | (1,0),(-1,0) -> 
                 (0,50*3-1-relY),(1,0)
             | (0,2),(-1,0) ->
                 (50,50-1-relY),(1,0)
 
-
+            // face 1 <-> face 6
             | (1,0),(0, -1) ->
                 (0,3*50+relX),(1,0)
             | (0,3),(-1, 0) ->
                 (50+relY,0),(0,1)
 
+            // face 2 <-> face 6
             | (2,0),(0, -1) ->
                 (relX,4*50-1),(0,-1)
             | (0,3),(0,1) ->
                 (2*50+relX,0),(0,1)
 
+            // face 2 <-> face 5
             | (2,0),(1,0) ->
                 (2*50-1,3*50-1-relY),(-1,0)
             | (1,2),(1,0) ->
                 (3*50-1,50-1-relY),(-1,0)
 
+            // face 2 <-> face 3
             | (2,0),(0,1) ->
                 (2*50-1,50+relX),(-1,0)
             | (1,1),(1,0) ->
                 (2*50+relY,50-1),(0, -1)
 
+            // face 5 <-> face 6
             | (1,2),(0,1) ->
                 (50-1,3*50+relX),(-1,0)
             | (0,3),(1,0) ->
