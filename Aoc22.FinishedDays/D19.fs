@@ -45,7 +45,7 @@ let getNextPos (bp: Blueprint) (st:State) : (State) seq =
             MinutesLeft=st.MinutesLeft - 1;
     }
 
-    let maxOre = [bp.ClayR_Ore;bp.OreR_Ore;bp.GeoR_Ore;bp.ObsR_Ore] |> List.max |> fun mxOre -> mxOre+1
+    let maxOre = [bp.ClayR_Ore;bp.OreR_Ore;bp.GeoR_Ore;bp.ObsR_Ore] |> List.max |> fun mxOre -> mxOre+3
 
     seq { 
         //if not (sc.Ore >= bp.OreR_Ore && sc.Ore >= bp.ClayR_Ore &&  sc.Ore >= bp.ObsR_Ore && sc.Clay >= bp.ObsR_Clay && sc.Ore >= bp.GeoR_Ore && sc.Obs >= bp.GeoR_Obs )
