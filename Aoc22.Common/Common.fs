@@ -151,12 +151,14 @@ module Common =
 
     let print2d (fullCoords: (int*int) seq) =
         let printed = fullCoords |> Seq.sortBy (fun pos -> snd pos,fst pos) |> List.ofSeq
-        let mutable prevY = 1
-        let mutable prevX = 1
+        let fstX,fstY = printed |> List.head
+        let minX = printed |> List.map fst |>List.min
+        let mutable prevY = fstY
+        let mutable prevX = minX-1
         for (x,y) in printed do
             while prevY <> y do
                 Console.WriteLine(); 
-                prevX <- 0;
+                prevX <- minX-1;
                 prevY <- prevY + 1
                 0 |> ignore
             
@@ -166,17 +168,20 @@ module Common =
             prevX <- x
 
     
-    let print2dBounds (fullCoords: (int*int) seq) minX maxX minY maxY =
+    let print2dBounds (fullCoords: (int*int) seq) minX minY maxX maxY =
         let printed = fullCoords |> Seq.filter (fun (x,y) -> x >= minX && x <= maxX && y >= minY && y <= maxY) |> Seq.sortBy (fun pos -> snd pos,fst pos) |> List.ofSeq
-        let mutable prevY = 1
-        let mutable prevX = 1
+
+        let fstX,fstY = printed |> List.head
+        //let minX = printed |> List.map fst |>List.min
+        let mutable prevY = minY
+        let mutable prevX = minX-1
         for (x,y) in printed do
             while prevY <> y do
                 Console.WriteLine(); 
-                prevX <- 0;
+                prevX <- minX-1;
                 prevY <- prevY + 1
                 0 |> ignore
-
+            
             for ix in [prevX+2 .. x] do Console.Write(' ')
             Console.Write("█")
             prevY <- y
