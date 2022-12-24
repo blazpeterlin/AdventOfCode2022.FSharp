@@ -20,6 +20,10 @@
     <Content Include="D22\input-TEST.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Compile Include="D21noZ3\T21noZ3.fs" />
+    <Content Include="D21noZ3\input-TEST.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Compile Include="D21\T21.fs" />
     <Content Include="D21\input-TEST.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
