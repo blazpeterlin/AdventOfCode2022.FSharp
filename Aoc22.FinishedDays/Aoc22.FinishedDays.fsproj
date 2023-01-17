@@ -34,6 +34,7 @@
     <Compile Include="D03.fs" />
     <Compile Include="D02.fs" />
     <Compile Include="D01.fs" />
+    <Compile Include="Practice\Practice_Aoc18_D14.fs" />
     <Compile Include="Practice\Practice_Aoc18_D24.fs" />
     <Compile Include="Practice\Practice_TypedRegex.fs" />
     <Compile Include="Practice\Practice_Z3_MinSquared.fs" />
